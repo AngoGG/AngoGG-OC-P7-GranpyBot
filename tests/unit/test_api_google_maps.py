@@ -12,10 +12,6 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from api.google_maps_api import GoogleMapsApi
 
-fake_resp: List[Dict[str, Any]] = [
-    {"geometry": {"location": {"lat": 49.165882, "lng": 2.244301}}}
-]
-
 
 class TestGoogleMapsApi:
     """GoogleMapsApi test class.
