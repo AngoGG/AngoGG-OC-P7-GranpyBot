@@ -9,6 +9,7 @@
 
 from typing import Any, Dict, List
 import pytest
+import mediawiki
 from _pytest.monkeypatch import MonkeyPatch
 from api.wiki_api import WikipediaApi
 
@@ -47,5 +48,42 @@ class TestWikipediaApi:
 
         wikipedia: WikipediaApi = WikipediaApi()
         wiki_response = wikipedia.query_by_geosearch(query)
+
+        assert wiki_response == expected_result
+
+    @pytest.mark.parametrize(
+        "query,expected_result",
+        [
+            ("Chambly (Oise)", "Sommaire de Chambly",),
+            (
+                "Jeux olympiques d'été de 2024",
+                "Sommaire des Jeux olympiques d'été de 2024",
+            ),
+        ],
+    )
+    def test_get_summary_from_wikipedia(
+        self, query: str, expected_result: str, monkeypatch: MonkeyPatch
+    ) -> None:
+        """The query_page test method.
+        Check if the method returns a right List from a query.
+        """
+
+        class MockMediaWiki:
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                return None
+
+            def page(self, query: str) -> None:
+                return mediawiki.MediaWikiPage()
+
+        class MockMediaWikiPage:
+            @property
+            def summary(self) -> mediawiki.MediaWikiPage:
+                return expected_result
+
+        monkeypatch.setattr("mediawiki.MediaWiki", MockMediaWiki)
+        monkeypatch.setattr("mediawiki.MediaWikiPage", MockMediaWikiPage)
+
+        wikipedia: WikipediaApi = WikipediaApi()
+        wiki_response = wikipedia.get_summary_from_wikipedia(query)
 
         assert wiki_response == expected_result
