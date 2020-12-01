@@ -47,3 +47,35 @@ class TestSentenceParser:
 
         assert parsed_sentence == expected_result
 
+    @pytest.mark.parametrize(
+        "words_list, expected_result",
+        [
+            (
+                [
+                    "Salut",
+                    "GrandPy",
+                    "est",
+                    "ce",
+                    "que",
+                    "tu",
+                    "connais",
+                    "l",
+                    "adresse",
+                    "d",
+                    "OpenClassrooms",
+                ],
+                ["Salut", "GrandPy", "connais", "adresse", "OpenClassrooms",],
+            )
+        ],
+    )
+    def test_remove_stop_words(
+        self, words_list: List[str], expected_result: List[str]
+    ) -> None:
+        """The remove_split_words test method.
+        Check if the method returns a right List of words after removing stop words.
+        """
+
+        parser: SentenceParser = SentenceParser()
+        clean_list = parser.remove_stop_words(words_list)
+
+        assert clean_list == expected_result
