@@ -49,3 +49,14 @@ class SentenceParser:
         """
         return [word for word in words_list if word not in self.stop_words]
 
+    def rebuild_sentence(self, words_list: List[str]) -> str:
+        """From a words list, returns a sentence string.
+        
+        Args:
+            words_list (List[str])): Words list to be rebuild as a sentence.
+        
+        Returns:
+            A sentence with all words from the list, separated with space.
+        """
+        return " ".join(words_list)
+

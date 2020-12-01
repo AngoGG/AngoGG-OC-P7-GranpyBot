@@ -79,3 +79,24 @@ class TestSentenceParser:
         clean_list = parser.remove_stop_words(words_list)
 
         assert clean_list == expected_result
+
+    @pytest.mark.parametrize(
+        "words_list, expected_result",
+        [
+            (
+                ["Salut", "GrandPy", "connais", "adresse", "OpenClassrooms",],
+                "Salut GrandPy connais adresse OpenClassrooms",
+            )
+        ],
+    )
+    def test_rebuild_sentence(
+        self, words_list: List[str], expected_result: str
+    ) -> None:
+        """The rebuild_sentence test method.
+        Check if the method returns a correct sentence from a words list.
+        """
+
+        parser: SentenceParser = SentenceParser()
+        sentence = parser.rebuild_sentence(words_list)
+
+        assert sentence == expected_result
