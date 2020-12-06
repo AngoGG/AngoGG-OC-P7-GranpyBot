@@ -24,7 +24,8 @@ class SentenceParser:
             Path("parsing/stop_words.json").read_bytes()
         )
 
-    def split_words(self, sentence: str) -> List[str]:
+    @staticmethod
+    def _split_words(sentence: str) -> List[str]:
         """This method splits a sentence string to a list of words.
         
         Args:
@@ -38,7 +39,7 @@ class SentenceParser:
 
         return list(filter(None, splitted_words))
 
-    def remove_stop_words(self, words_list: List[str]) -> List[str]:
+    def _remove_stop_words(self, words_list: List[str]) -> List[str]:
         """This method returns a list of all the non stop_words from a words list.
         
         Args:
@@ -49,7 +50,8 @@ class SentenceParser:
         """
         return [word for word in words_list if word not in self.stop_words]
 
-    def rebuild_sentence(self, words_list: List[str]) -> str:
+    @staticmethod
+    def _rebuild_sentence(words_list: List[str]) -> str:
         """From a words list, returns a sentence string.
         
         Args:
@@ -59,4 +61,18 @@ class SentenceParser:
             A sentence with all words from the list, separated with space.
         """
         return " ".join(words_list)
+
+    def get_clean_sentence(self, sentence: str) -> str:
+        """From a user sentence, return a clean sentence to query APIs.
+        
+        Args:
+            sentence (str): User query sentence.
+
+        Returns:
+            Clean sentence to query APIs
+        """
+
+        return self._rebuild_sentence(
+            self._remove_stop_words(self._split_words(sentence))
+        )
 

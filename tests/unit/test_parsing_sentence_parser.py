@@ -37,13 +37,13 @@ class TestSentenceParser:
             )
         ],
     )
-    def test_split_words(self, sentence: str, expected_result: List[str]) -> None:
+    def test__split_words(self, sentence: str, expected_result: List[str]) -> None:
         """The split_words test method.
         Check if the method returns a right List of words from a sentence.
         """
 
         parser: SentenceParser = SentenceParser()
-        parsed_sentence = parser.split_words(sentence)
+        parsed_sentence = parser._split_words(sentence)
 
         assert parsed_sentence == expected_result
 
@@ -68,7 +68,7 @@ class TestSentenceParser:
             )
         ],
     )
-    def test_remove_stop_words(
+    def test__remove_stop_words(
         self, words_list: List[str], expected_result: List[str]
     ) -> None:
         """The remove_split_words test method.
@@ -76,7 +76,7 @@ class TestSentenceParser:
         """
 
         parser: SentenceParser = SentenceParser()
-        clean_list = parser.remove_stop_words(words_list)
+        clean_list = parser._remove_stop_words(words_list)
 
         assert clean_list == expected_result
 
@@ -89,7 +89,7 @@ class TestSentenceParser:
             )
         ],
     )
-    def test_rebuild_sentence(
+    def test__rebuild_sentence(
         self, words_list: List[str], expected_result: str
     ) -> None:
         """The rebuild_sentence test method.
@@ -97,6 +97,6 @@ class TestSentenceParser:
         """
 
         parser: SentenceParser = SentenceParser()
-        sentence = parser.rebuild_sentence(words_list)
+        sentence = parser._rebuild_sentence(words_list)
 
         assert sentence == expected_result
