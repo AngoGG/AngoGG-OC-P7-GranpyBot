@@ -22,9 +22,9 @@ class TestSentenceParser:
             (
                 "Salut GrandPy ! Est-ce que tu connais l'adresse d'OpenClassrooms ?",
                 [
-                    "Salut",
-                    "GrandPy",
-                    "Est",
+                    "salut",
+                    "grandpy",
+                    "est",
                     "ce",
                     "que",
                     "tu",
@@ -32,7 +32,7 @@ class TestSentenceParser:
                     "l",
                     "adresse",
                     "d",
-                    "OpenClassrooms",
+                    "openclassrooms",
                 ],
             )
         ],
@@ -52,8 +52,8 @@ class TestSentenceParser:
         [
             (
                 [
-                    "Salut",
-                    "GrandPy",
+                    "salut",
+                    "grandpy",
                     "est",
                     "ce",
                     "que",
@@ -62,9 +62,9 @@ class TestSentenceParser:
                     "l",
                     "adresse",
                     "d",
-                    "OpenClassrooms",
+                    "openclassrooms",
                 ],
-                ["Salut", "GrandPy", "connais", "adresse", "OpenClassrooms",],
+                ["salut", "grandpy", "connais", "adresse", "openclassrooms",],
             )
         ],
     )
@@ -84,8 +84,8 @@ class TestSentenceParser:
         "words_list, expected_result",
         [
             (
-                ["Salut", "GrandPy", "connais", "adresse", "OpenClassrooms",],
-                "Salut GrandPy connais adresse OpenClassrooms",
+                ["salut", "grandpy", "connais", "adresse", "openclassrooms",],
+                "salut grandpy connais adresse openclassrooms",
             )
         ],
     )

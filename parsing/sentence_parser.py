@@ -34,7 +34,7 @@ class SentenceParser:
             A list of all user sentence words.
         """
 
-        splitted_words: List[str] = re.split(r"\W", sentence)
+        splitted_words: List[str] = re.split(r"\W", sentence.lower())
 
         return list(filter(None, splitted_words))
 
