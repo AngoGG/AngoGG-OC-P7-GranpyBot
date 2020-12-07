@@ -54,18 +54,29 @@ class TestWikipediaApi:
     @pytest.mark.parametrize(
         "query,expected_result",
         [
-            ("Chambly (Oise)", "Sommaire de Chambly",),
+            (
+                "Chambly (Oise)",
+                {
+                    "title": "Chambly (Oise)",
+                    "summary": "Sommaire de Chambly",
+                    "url": "https://fr.wikipedia.org/wiki/Église_Notre-Dame_de_Chambly",
+                },
+            ),
             (
                 "Jeux olympiques d'été de 2024",
-                "Sommaire des Jeux olympiques d'été de 2024",
+                {
+                    "title": "Jeux olympiques d'été de 2024",
+                    "summary": "Sommaire des Jeux olympiques d'été de 2024",
+                    "url": "https://fr.wikipedia.org/wiki/Jeux_olympiques_d'été_de_2024",
+                },
             ),
         ],
     )
-    def test_get_summary_from_wikipedia(
+    def test_get_infos_from_wikipedia(
         self, query: str, expected_result: str, monkeypatch: MonkeyPatch
     ) -> None:
         """The query_page test method.
-        Check if the method returns a right List from a query.
+        Check if the method returns a dictionnary from a query.
         """
 
         class MockMediaWiki:
@@ -78,12 +89,20 @@ class TestWikipediaApi:
         class MockMediaWikiPage:
             @property
             def summary(self) -> mediawiki.MediaWikiPage:
-                return expected_result
+                return expected_result["summary"]
+
+            @property
+            def url(self) -> mediawiki.MediaWikiPage:
+                return expected_result["url"]
+
+            @property
+            def title(self) -> mediawiki.MediaWikiPage:
+                return expected_result["title"]
 
         monkeypatch.setattr("mediawiki.MediaWiki", MockMediaWiki)
         monkeypatch.setattr("mediawiki.MediaWikiPage", MockMediaWikiPage)
 
         wikipedia: WikipediaApi = WikipediaApi()
-        wiki_response = wikipedia.get_summary_from_wikipedia(query)
+        wiki_response = wikipedia.get_infos_from_wikipedia(query)
 
         assert wiki_response == expected_result

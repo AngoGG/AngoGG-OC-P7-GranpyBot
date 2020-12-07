@@ -33,15 +33,15 @@ class WikipediaApi:
             latitude=position["lat"], longitude=position["lng"], results=1
         )
 
-    def get_summary_from_wikipedia(self, query: str) -> str:
+    def get_infos_from_wikipedia(self, query: str) -> Dict[str, str]:
         """Performs a page search on the Wikipedia API
         Params:
             query: The location we need information on.
         Returns:
-            A string containing the summary informations from 
-            Wikipedia for the location.
+            A dictionary containing the title, summary and the url link 
+            from Wikipedia page for the given location.
         """
 
         page = self.wikipedia.page(query)
 
-        return page.summary
+        return {"title": page.title, "summary": page.summary, "url": page.url}
