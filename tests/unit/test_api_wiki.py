@@ -73,7 +73,7 @@ class TestWikipediaApi:
         ],
     )
     def test_get_infos_from_wikipedia(
-        self, query: str, expected_result: str, monkeypatch: MonkeyPatch
+        self, query: str, expected_result: Dict[str, str], monkeypatch: MonkeyPatch
     ) -> None:
         """The query_page test method.
         Check if the method returns a dictionnary from a query.
