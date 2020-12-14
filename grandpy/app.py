@@ -13,7 +13,7 @@ from api.wiki_api import WikipediaApi
 from parsing.sentence_parser import SentenceParser
 
 
-class GrandPy:
+class App:
     """This class is intended to drive the general application work by getting 
     the user research and returning him the bot response with APIs informations.
     """
@@ -25,7 +25,7 @@ class GrandPy:
         self.wikipedia: WikipediaApi = WikipediaApi()
         self.parser: SentenceParser = SentenceParser()
 
-    def ask_grandpy(self, query: str) -> Dict[str, any]:
+    def answer(self, query: str) -> Dict[str, any]:
         """From a user query, return a http Response containing the localisation, the wikipedia summary and links that 
         
         Args:

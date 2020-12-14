@@ -9,14 +9,14 @@
 
 import pytest
 from typing import Any, Dict, List
-from app.grandpy import GrandPy
+from grandpy.app import App
 import mediawiki
 from _pytest.monkeypatch import MonkeyPatch
 from api.wiki_api import WikipediaApi
 from api.google_maps_api import GoogleMapsApi
 
 
-class TestGrandPy:
+class TestApp:
     @pytest.mark.parametrize(
         "query, wiki_geosearch_response, expected_result",
         [
@@ -32,7 +32,7 @@ class TestGrandPy:
             )
         ],
     )
-    def test_ask_grandpy(
+    def test_answer(
         self,
         query: str,
         wiki_geosearch_response: List[str],
@@ -76,6 +76,6 @@ class TestGrandPy:
         monkeypatch.setattr("mediawiki.MediaWiki", MockMediaWiki)
         monkeypatch.setattr("mediawiki.MediaWikiPage", MockMediaWikiPage)
 
-        self.grandpy: GrandPy = GrandPy()
+        self.grandpy: App = App()
 
-        assert self.grandpy.ask_grandpy(query) == expected_result
+        assert self.grandpy.answer(query) == expected_result
