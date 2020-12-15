@@ -7,4 +7,3 @@ def test_home() -> None:
     client = app.test_client()
     response = client.get("/")
     assert response.status_code == 200
-
