@@ -8,6 +8,7 @@
 """
 
 import os
+import urllib.parse
 from typing import Dict, List
 import mediawiki
 
@@ -44,4 +45,8 @@ class WikipediaApi:
 
         page = self.wikipedia.page(query)
 
-        return {"title": page.title, "summary": page.summary, "url": page.url}
+        return {
+            "title": page.title,
+            "summary": page.summary,
+            "url": urllib.parse.unquote(page.url),
+        }
