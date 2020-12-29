@@ -7,6 +7,7 @@
 @note    0.0.1 (2020-12-14) : Init file
 """
 
+import os
 from typing import Dict
 from flask import Flask, jsonify, render_template, Response, request
 from grandpy.app import App
@@ -16,7 +17,9 @@ app = Flask(__name__)
 
 @app.route("/")
 def home() -> str:
-    return render_template("home.html")
+    return render_template(
+        "home.html", google_api_public_key=os.environ.get("GOOGLE_API_PUBLIC_KEY")
+    )
 
 
 @app.route("/ask_grandpy", methods=["POST"])
