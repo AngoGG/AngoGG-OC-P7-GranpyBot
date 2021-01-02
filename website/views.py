@@ -28,8 +28,14 @@ def ask_grandpy() -> Response:
     grandpy: App = App()
     response: Dict[str, any] = grandpy.answer(query)
 
-    print(f"query : {query}")
-    print(f"response : {response}")
+    # Usef when Wiki API is dead
+    # response = {
+    #    "location": {"lat": 48.856614, "lng": 2.3522219},
+    #    "title": "Jeux olympiques d'été de 2024",
+    #    "summary": "Les Jeux olympiques d'été de 2024",
+    #    "url": "https://fr.wikipedia.org/wiki/Jeux_olympiques_d'été_de_2024",
+    # }
+
     if response:
         return jsonify(response), 200
     else:
