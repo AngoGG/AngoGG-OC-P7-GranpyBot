@@ -7,9 +7,7 @@
 @note    0.0.1 (2020-11-30) : Init file
 """
 
-import os
-from typing import Any, Dict, List
-import googlemaps
+from typing import Dict
 
 
 class GoogleMapsApi:
@@ -19,12 +17,9 @@ class GoogleMapsApi:
     def __init__(self) -> None:
         """The GoogleMapsApi Constructor
         """
+        ...
 
-        self.gmaps: googlemaps.Client = googlemaps.Client(
-            key=os.environ.get("GOOGLE_API_KEY")
-        )
-
-    def query_by_geocode(self, query: str) -> Dict[str, float]:  # pylint: disable=R1710
+    def query_by_geocode(self, query: str) -> Dict[str, float]:
         """From a query return a dictionary containing latitude and longitude.
 
         Args:
@@ -32,7 +27,15 @@ class GoogleMapsApi:
         Returns:
             Dict[str, float]: The location of the searched place.
         """
+        ...
 
-        maps_response: List[Dict[str, Any]] = self.gmaps.geocode(query)
-        location: Dict[str, float] = maps_response[0]["geometry"]["location"]
-        return location
+    def _get_coords(self, query: str) -> Dict[str, float]:
+        """Query the Google Geocode API and returns the coords of the requested address.
+        
+        Args:
+            query (str): The address requested by the user.
+
+        Returns:
+            Dict[str, float]: The location of the requested place.
+        """
+        ...
