@@ -36,7 +36,7 @@ class App:
         """
         sentence: str = self.parser.get_clean_sentence(query)
 
-        location: Dict[str, float] = self.google_maps.query_by_geocode(sentence)
+        location: Dict[str, float] = self.google_maps.search(sentence)
         wiki = self.wikipedia.query_by_geosearch(location)
         wiki_infos = self.wikipedia.get_infos_from_wikipedia(wiki[0])
 
