@@ -19,7 +19,7 @@ class GoogleMapsApi:
     def __init__(self) -> None:
         """The GoogleMapsApi Constructor
         """
-        self.google_maps_api_url: str = "http://maps.googleapis.com/maps/api/geocode/json"
+        self.google_maps_api_url: str = "https://maps.googleapis.com/maps/api/geocode/json"
         self.payloads: Dict = {
             "key": os.environ.get("GOOGLE_API_KEY"),
             "region": "fr",
