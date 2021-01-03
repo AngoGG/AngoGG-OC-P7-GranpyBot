@@ -6,10 +6,16 @@ function create_map(coords) {
     map_div.setAttribute('class', 'map-container-5 z-depth-1-half');
     map_div.setAttribute('style', 'height: 300px');
 
-    new google.maps.Map(map_div, {
+    map = new google.maps.Map(map_div, {
         center: coords,
-        zoom: 10,
+        zoom: 20,
     });
+
+    const marker = new google.maps.Marker({
+        position: coords,
+        map: map,
+      });
+    
 
     map_card_div.appendChild(map_div)
     
@@ -86,12 +92,13 @@ $(document).ready(function(){
     
     $('#ask_grandpy').click(function(e){
         e.preventDefault(); 
-        var question = encodeURIComponent( $('#question').val() );
+        var question = encodeURI( $('#question').val() );
+
         
         // Sentence Div Creation
         var chat_box = document.getElementById('chat-box');
         
-        question_entry = create_question_div(question)
+        question_entry = create_question_div(decodeURI(question))
         chat_box.appendChild(question_entry)
         
         answer_entry = create_question_div("Laisse moi réfléchir...")
