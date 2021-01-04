@@ -8,9 +8,9 @@
 """
 
 import os
+import requests
 import urllib.parse
-from typing import Dict, List
-import mediawiki
+from typing import Any, Dict, List
 
 
 class WikipediaApi:
@@ -20,16 +20,27 @@ class WikipediaApi:
     def __init__(self) -> None:
         """The WikipediaApi Constructor
         """
-        ...
+        self.wiki_api_url: str = "https://fr.wikipedia.org/w/api.php"
 
-    def _search_query_page(self, title: str) -> None:
-        """Method Description.
-        Description details here (if needed).
+    def _search_query_page(self, title: str) -> Dict[str, Any]:
+        """Search for similar titles on Wiki API
         
         Args:
-            name (type): Description. Default to False.
+            title (str): Page title.
         
-        Raises:
         Returns:
+            Dict[str, Any]: Page ID and title of the API response page.
         """
-        ...
+        params: Dict = {
+            "action": "query",
+            "format": "json",
+            "list": "search",
+            "srsearch": title,
+        }
+        req = requests.get(self.wiki_api_url, params=params)
+
+        data = req.json()
+        return {
+            "page_id": data["query"]["search"][0]["pageid"],
+            "title": data["query"]["search"][0]["title"],
+        }
