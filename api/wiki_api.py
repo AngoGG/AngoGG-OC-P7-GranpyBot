@@ -116,3 +116,18 @@ class WikipediaApi:
         req = requests.get(self.wiki_api_url, params=params)
 
         return req.json()["query"]["pages"][str(page_id)]["fullurl"]
+
+    def get_page_info(
+        self, gmaps_title: str, gmaps_coords: Dict[str, float]
+    ) -> Dict[str, Any]:
+        """Method Description.
+        Description details here (if needed).
+        
+        Args:
+            name (type): Description. Default to False.
+        
+        Raises:
+        Returns:
+        """
+        ...
+

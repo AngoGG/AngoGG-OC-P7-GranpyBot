@@ -14,6 +14,7 @@ import mediawiki
 from _pytest.monkeypatch import MonkeyPatch
 from api.wiki_api import WikipediaApi
 
+
 WIKI_TITLE_SEARCH_DATA: Dict = {
     "batchcomplete": "",
     "continue": {"sroffset": 10, "continue": "-||"},
@@ -169,9 +170,7 @@ class TestWikipediaApi:
         [
             (
                 681159,
-                [
-                    "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n",
-                ],
+                "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n",
             ),
         ],
     )
@@ -193,7 +192,7 @@ class TestWikipediaApi:
         assert wiki_response in expected_result
 
     @pytest.mark.parametrize(
-        "query,expected_result", [(681159, ["https://fr.wikipedia.org/wiki/Paris",],),],
+        "query,expected_result", [(681159, "https://fr.wikipedia.org/wiki/Paris",),],
     )
     def test__get_page_url(
         self, query: str, expected_result: Dict[str, float], monkeypatch: MonkeyPatch
@@ -210,4 +209,46 @@ class TestWikipediaApi:
         wikipedia: WikipediaApi = WikipediaApi()
         wiki_response = wikipedia._get_page_url(query)
 
-        assert wiki_response in expected_result
+        assert wiki_response == expected_result
+
+    @pytest.mark.parametrize(
+        "query,expected_result",
+        [
+            (
+                {
+                    "title": "Paris, France",
+                    "coords": {"lat": 48.856614, "lng": 2.3522219},
+                },
+                {
+                    "page_info": {
+                        "title": "Paris",
+                        "summary": "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n",
+                        "url": "https://fr.wikipedia.org/wiki/Paris",
+                    },
+                    "search_type": "title",
+                },
+            ),
+        ],
+    )
+    def test__get_page_info_ok_title(
+        self, query: str, expected_result: Dict[str, float], monkeypatch: MonkeyPatch
+    ) -> None:
+        class MockWikipediaApi:
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                return None
+
+            def _search_page_by_title(self, coords: Dict[str, float]) -> Dict:
+                return {"page_id": 681159, "title": "Paris"}
+
+            def _get_page_summary(self, coords: Dict[str, float]) -> Dict:
+                return "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n"
+
+            def _get_page_url(self, coords: Dict[str, float]) -> Dict:
+                return "https://fr.wikipedia.org/wiki/Paris"
+
+        monkeypatch.setattr("api.wiki_api.WikipediaApi", MockWikipediaApi)
+
+        wikipedia: WikipediaApi = WikipediaApi()
+        wiki_response = wikipedia.get_page_info(query["title"], query["coords"])
+
+        assert wiki_response == expected_result
