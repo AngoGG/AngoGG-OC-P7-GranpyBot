@@ -70,3 +70,27 @@ class WikipediaApi:
             "page_id": data["pageid"],
             "title": data["title"],
         }
+
+    def _get_page_summary(self, page_id) -> Dict[str, Any]:
+        """Method Description.
+        Description details here (if needed).
+        
+        Args:
+            name (type): Description. Default to False.
+        
+        Raises:
+        Returns:
+        """
+        params: Dict = {
+            "action": "query",
+            "format": "json",
+            "prop": "extracts",
+            "pageids": page_id,
+            "formatversion": "latest",
+            "exsentences": 3,
+            "explaintext": True,
+        }
+
+        req = requests.get(self.wiki_api_url, params=params)
+
+        return req.json()["query"]["pages"][0]["extract"]
