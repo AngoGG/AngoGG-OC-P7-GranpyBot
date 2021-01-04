@@ -9,9 +9,33 @@
 
 from typing import Any, Dict, List
 import pytest
+import requests
 import mediawiki
 from _pytest.monkeypatch import MonkeyPatch
 from api.wiki_api import WikipediaApi
+
+WIKI_SEARCH_DATA: Dict = {
+    "batchcomplete": "",
+    "continue": {"sroffset": 10, "continue": "-||"},
+    "query": {
+        "searchinfo": {
+            "totalhits": 411694,
+            "suggestion": "marie",
+            "suggestionsnippet": "marie",
+        },
+        "search": [
+            {
+                "ns": 0,
+                "title": "Paris",
+                "pageid": 681159,
+                "size": 407409,
+                "wordcount": 44698,
+                "snippet": 'significations, voir <span class="searchmatch">Paris</span> (homonymie). « Ville Lumière » redirige ici. Ne pas confondre avec Ville de lumière ni la villa Lumière. <span class="searchmatch">Paris</span> ([pa.ʁi]Écouter)',
+                "timestamp": "2021-01-02T15:42:41Z",
+            },
+        ],
+    },
+}
 
 
 class TestWikipediaApi:
@@ -19,90 +43,21 @@ class TestWikipediaApi:
     """
 
     @pytest.mark.parametrize(
-        "query,expected_result",
-        [
-            ({"lat": 49.165882, "lng": 2.244301}, ["Chambly (Oise)",],),
-            ({"lat": 48.856614, "lng": 2.3522219}, ["Jeux olympiques d'été de 2024"],),
-        ],
+        "query,expected_result", [("Paris", {"page_id": 681159, "title": "Paris"}),],
     )
-    def test_query_by_geosearch(
-        self,
-        query: Dict[str, float],
-        expected_result: List[str],
-        monkeypatch: MonkeyPatch,
+    def test__search_page(
+        self, query: str, expected_result: Dict[str, float], monkeypatch: MonkeyPatch
     ) -> None:
-        """The query_by_geosearch test method.
-        Check if the method returns a right List from a query.
-        """
-
-        class MockResponse:
+        class MockRequest:
             def __init__(self, *args: Any, **kwargs: Any) -> None:
                 return None
 
-            def geosearch(
-                self, latitude: str, longitude: str, results: int
-            ) -> List[str]:
-                return expected_result
+            def json(self) -> Dict:
+                return WIKI_SEARCH_DATA
 
-        monkeypatch.setattr("mediawiki.MediaWiki", MockResponse)
+        monkeypatch.setattr(requests, "get", MockRequest)
 
         wikipedia: WikipediaApi = WikipediaApi()
-        wiki_response = wikipedia.query_by_geosearch(query)
-
-        assert wiki_response == expected_result
-
-    @pytest.mark.parametrize(
-        "query,expected_result",
-        [
-            (
-                "Chambly (Oise)",
-                {
-                    "title": "Chambly (Oise)",
-                    "summary": "Sommaire de Chambly",
-                    "url": "https://fr.wikipedia.org/wiki/Église_Notre-Dame_de_Chambly",
-                },
-            ),
-            (
-                "Jeux olympiques d'été de 2024",
-                {
-                    "title": "Jeux olympiques d'été de 2024",
-                    "summary": "Sommaire des Jeux olympiques d'été de 2024",
-                    "url": "https://fr.wikipedia.org/wiki/Jeux_olympiques_d'été_de_2024",
-                },
-            ),
-        ],
-    )
-    def test_get_infos_from_wikipedia(
-        self, query: str, expected_result: Dict[str, str], monkeypatch: MonkeyPatch
-    ) -> None:
-        """The query_page test method.
-        Check if the method returns a dictionnary from a query.
-        """
-
-        class MockMediaWiki:
-            def __init__(self, *args: Any, **kwargs: Any) -> None:
-                return None
-
-            def page(self, query: str) -> None:
-                return mediawiki.MediaWikiPage()
-
-        class MockMediaWikiPage:
-            @property
-            def summary(self) -> mediawiki.MediaWikiPage:
-                return expected_result["summary"]
-
-            @property
-            def url(self) -> mediawiki.MediaWikiPage:
-                return expected_result["url"]
-
-            @property
-            def title(self) -> mediawiki.MediaWikiPage:
-                return expected_result["title"]
-
-        monkeypatch.setattr("mediawiki.MediaWiki", MockMediaWiki)
-        monkeypatch.setattr("mediawiki.MediaWikiPage", MockMediaWikiPage)
-
-        wikipedia: WikipediaApi = WikipediaApi()
-        wiki_response = wikipedia.get_infos_from_wikipedia(query)
+        wiki_response = wikipedia._search_query_page(query)
 
         assert wiki_response == expected_result
