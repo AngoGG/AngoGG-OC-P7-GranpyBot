@@ -86,6 +86,29 @@ WIKI_SUMMARY_DATA: Dict = {
     },
 }
 
+WIKI_URL_DATA: Dict = {
+    "batchcomplete": "",
+    "query": {
+        "pages": {
+            "681159": {
+                "pageid": 681159,
+                "ns": 0,
+                "title": "Paris",
+                "contentmodel": "wikitext",
+                "pagelanguage": "fr",
+                "pagelanguagehtmlcode": "fr",
+                "pagelanguagedir": "ltr",
+                "touched": "2021-01-04T15:20:46Z",
+                "lastrevid": 178406474,
+                "length": 407435,
+                "fullurl": "https://fr.wikipedia.org/wiki/Paris",
+                "editurl": "https://fr.wikipedia.org/w/index.php?title=Paris&action=edit",
+                "canonicalurl": "https://fr.wikipedia.org/wiki/Paris",
+            }
+        }
+    },
+}
+
 
 class TestWikipediaApi:
     """WikipediaApi test class.
@@ -166,5 +189,25 @@ class TestWikipediaApi:
 
         wikipedia: WikipediaApi = WikipediaApi()
         wiki_response = wikipedia._get_page_summary(query)
+
+        assert wiki_response in expected_result
+
+    @pytest.mark.parametrize(
+        "query,expected_result", [(681159, ["https://fr.wikipedia.org/wiki/Paris",],),],
+    )
+    def test__get_page_url(
+        self, query: str, expected_result: Dict[str, float], monkeypatch: MonkeyPatch
+    ) -> None:
+        class MockRequest:
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                return None
+
+            def json(self) -> Dict:
+                return WIKI_URL_DATA
+
+        monkeypatch.setattr(requests, "get", MockRequest)
+
+        wikipedia: WikipediaApi = WikipediaApi()
+        wiki_response = wikipedia._get_page_url(query)
 
         assert wiki_response in expected_result
