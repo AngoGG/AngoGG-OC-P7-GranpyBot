@@ -8,6 +8,7 @@
 """
 
 import os
+import random
 import requests
 import urllib.parse
 from typing import Any, Dict, List
@@ -22,7 +23,7 @@ class WikipediaApi:
         """
         self.wiki_api_url: str = "https://fr.wikipedia.org/w/api.php"
 
-    def _search_query_page(self, title: str) -> Dict[str, Any]:
+    def _search_page_by_title(self, title: str) -> Dict[str, Any]:
         """Search for similar titles on Wiki API
         
         Args:
@@ -44,3 +45,14 @@ class WikipediaApi:
             "page_id": data["query"]["search"][0]["pageid"],
             "title": data["query"]["search"][0]["title"],
         }
+
+    def _search_page_by_geo(self, coords: Dict[str, float]) -> Dict[str, Any]:
+        """Search and returns a random page near the given coords.  
+        
+        Args:
+            coords (str): Location Coords.
+        
+        Returns:
+            Dict[str, Any]: Page ID and title of the API response page.
+        """
+        ...
