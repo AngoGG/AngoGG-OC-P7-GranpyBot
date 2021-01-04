@@ -55,4 +55,18 @@ class WikipediaApi:
         Returns:
             Dict[str, Any]: Page ID and title of the API response page.
         """
-        ...
+        lat = str(coords["lat"])
+        lng = str(coords["lng"])
+        params: Dict = {
+            "action": "query",
+            "format": "json",
+            "list": "geosearch",
+            "gscoord": f"{lat}|{lng}",
+        }
+        req = requests.get(self.wiki_api_url, params=params)
+
+        data = random.choice(req.json()["query"]["geosearch"])
+        return {
+            "page_id": data["pageid"],
+            "title": data["title"],
+        }
