@@ -131,7 +131,6 @@ class WikipediaApi:
         """
 
         page_id = self._search_page_by_title(gmaps_title)
-        print(page_id)
 
         if gmaps_title in page_id["title"] or page_id["title"] in gmaps_title:
             page_info = {

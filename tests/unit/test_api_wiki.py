@@ -222,6 +222,15 @@ class TestWikipediaApi:
         )
 
     @pytest.fixture
+    def mock__search_page_by_geo(self, monkeypatch: MonkeyPatch) -> str:
+        def _search_page_by_geo_patch(self, page_id: int) -> str:
+            return {"page_id": 681159, "title": "Title from coords"}
+
+        monkeypatch.setattr(
+            WikipediaApi, "_search_page_by_geo", _search_page_by_geo_patch
+        )
+
+    @pytest.fixture
     def mock__get_page_summary(self, monkeypatch: MonkeyPatch) -> str:
         def _get_page_summary_patch(self, page_id: int) -> str:
             return "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n"
@@ -266,5 +275,40 @@ class TestWikipediaApi:
 
         wikipedia: WikipediaApi = WikipediaApi()
         wiki_response = wikipedia.get_page_info(query["title"], query["coords"])
+
+        assert wiki_response == expected_result
+
+    @pytest.mark.parametrize(
+        "query,expected_result",
+        [
+            (
+                {
+                    "title": "Paris, France",
+                    "coords": {"lat": 48.856614, "lng": 2.3522219},
+                },
+                {
+                    "page_info": {
+                        "title": "Title from coords",
+                        "summary": "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n",
+                        "url": "https://fr.wikipedia.org/wiki/Paris",
+                    },
+                    "search_type": "coords",
+                },
+            ),
+        ],
+    )
+    def test__get_page_info_ko_title(
+        self,
+        query: str,
+        expected_result: Dict[str, float],
+        monkeypatch: MonkeyPatch,
+        mock__search_page_by_title,
+        mock__search_page_by_geo,
+        mock__get_page_summary,
+        mock__get_page_url,
+    ) -> None:
+
+        wikipedia: WikipediaApi = WikipediaApi()
+        wiki_response = wikipedia.get_page_info("Fake title", query["coords"])
 
         assert wiki_response == expected_result
