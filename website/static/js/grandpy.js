@@ -113,14 +113,14 @@ $(document).ready(function(){
             
             success: function(response, textStatus, jqXHR) {
                 var obj = JSON.parse(response);
-
+                console.log(obj)
                 var url = document.createElement("a");
-                var url_text = document.createTextNode(obj.url)
+                var url_text = document.createTextNode(obj.info.url)
                 url.setAttribute('href', obj.url);
                 url.setAttribute('target', '_blank');
                 url.appendChild(url_text);
 
-                var map_google = create_map(obj.location)
+                var map_google = create_map(obj.info.location)
 
                 answer_entry = create_answer_div("Hey oui mon kiki j'ai la réponse! Elle se trouve juste ici! ", url, map_google)
 
