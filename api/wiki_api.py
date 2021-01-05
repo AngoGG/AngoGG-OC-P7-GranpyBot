@@ -8,9 +8,10 @@
 """
 
 import os
+import random
+import requests
 import urllib.parse
-from typing import Dict, List
-import mediawiki
+from typing import Any, Dict, List
 
 
 class WikipediaApi:
@@ -20,33 +21,136 @@ class WikipediaApi:
     def __init__(self) -> None:
         """The WikipediaApi Constructor
         """
+        self.wiki_api_url: str = "https://fr.wikipedia.org/w/api.php"
 
-        self.wikipedia: mediawiki.MediaWiki = mediawiki.MediaWiki(lang="fr")
-
-    def query_by_geosearch(self, position: Dict[str, float]) -> List[str]:
-        """Performs a geosearch on the Wikipedia API
-        Params:
-            position: used to get GPS data for the search
+    def _search_page_by_title(self, title: str) -> Dict[str, Any]:
+        """Search for similar titles on Wiki API
+        
+        Args:
+            title (str): Page title.
+        
         Returns:
-            A list of results (title pages from wikipedia)"""
+            Dict[str, Any]: Page ID and title of the API response page.
+        """
+        params: Dict = {
+            "action": "query",
+            "format": "json",
+            "list": "search",
+            "srsearch": title,
+        }
+        req = requests.get(self.wiki_api_url, params=params)
 
-        return self.wikipedia.geosearch(
-            latitude=position["lat"], longitude=position["lng"], results=1
-        )
+        data = req.json()
+        return {
+            "page_id": data["query"]["search"][0]["pageid"],
+            "title": data["query"]["search"][0]["title"],
+        }
 
-    def get_infos_from_wikipedia(self, query: str) -> Dict[str, str]:
-        """Performs a page search on the Wikipedia API
-        Params:
-            query: The location we need information on.
+    def _search_page_by_geo(self, coords: Dict[str, float]) -> Dict[str, Any]:
+        """Search and returns a random page near the given coords.  
+        
+        Args:
+            coords (str): Location Coords.
+        
         Returns:
-            A dictionary containing the title, summary and the url link 
-            from Wikipedia page for the given location.
+            Dict[str, Any]: Page ID and title of the API response page.
+        """
+        lat = str(coords["lat"])
+        lng = str(coords["lng"])
+        params: Dict = {
+            "action": "query",
+            "format": "json",
+            "list": "geosearch",
+            "gscoord": f"{lat}|{lng}",
+        }
+        req = requests.get(self.wiki_api_url, params=params)
+
+        data = random.choice(req.json()["query"]["geosearch"])
+        return {
+            "page_id": data["pageid"],
+            "title": data["title"],
+        }
+
+    def _get_page_summary(self, page_id: int) -> str:
+        """Method Description.
+        Description details here (if needed).
+        
+        Args:
+            name (type): Description. Default to False.
+        
+        Raises:
+        Returns:
+        """
+        params: Dict = {
+            "action": "query",
+            "format": "json",
+            "prop": "extracts",
+            "pageids": page_id,
+            "formatversion": "latest",
+            "exsentences": 3,
+            "explaintext": True,
+        }
+
+        req = requests.get(self.wiki_api_url, params=params)
+
+        return req.json()["query"]["pages"][0]["extract"]
+
+    def _get_page_url(self, page_id: int) -> str:
+        """Method Description.
+        Description details here (if needed).
+        
+        Args:
+            name (type): Description. Default to False.
+        
+        Raises:
+        Returns:
+        """
+        params: Dict = {
+            "action": "query",
+            "format": "json",
+            "prop": "info",
+            "inprop": "url",
+            "pageids": page_id,
+        }
+
+        req = requests.get(self.wiki_api_url, params=params)
+
+        return req.json()["query"]["pages"][str(page_id)]["fullurl"]
+
+    def get_page_info(
+        self, gmaps_title: str, gmaps_coords: Dict[str, float]
+    ) -> Dict[str, Any]:
+        """Method Description.
+        Description details here (if needed).
+        
+        Args:
+            name (type): Description. Default to False.
+        
+        Raises:
+        Returns:
         """
 
-        page = self.wikipedia.page(query)
+        page_id = self._search_page_by_title(gmaps_title)
 
-        return {
-            "title": page.title,
-            "summary": page.summary,
-            "url": urllib.parse.unquote(page.url),
-        }
+        if gmaps_title in page_id["title"] or page_id["title"] in gmaps_title:
+            page_info = {
+                "page_info": {
+                    "title": page_id["title"],
+                    "summary": self._get_page_summary(page_id["page_id"]),
+                    "url": self._get_page_url(page_id["page_id"]),
+                },
+                "search_type": "title",
+            }
+        else:
+            page_id = self._search_page_by_geo(gmaps_coords)
+            page_info = {
+                "page_info": {
+                    "title": page_id["title"],
+                    "summary": self._get_page_summary(page_id["page_id"]),
+                    "url": self._get_page_url(page_id["page_id"]),
+                },
+                "search_type": "coords",
+            }
+
+        return page_info
+
