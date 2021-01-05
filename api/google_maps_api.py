@@ -35,8 +35,11 @@ class GoogleMapsApi:
             Dict[str, float]: The location of the searched place.
         """
         data = self._request(query)
-        coords = data["results"][0]["geometry"]["location"]
-        return coords
+
+        return {
+            "title": data["results"][0]["formatted_address"],
+            "coords": data["results"][0]["geometry"]["location"],
+        }
 
     def _request(self, query: str) -> Dict[str, float]:
         """Query the Google Geocode API and returns the coords of the requested address.

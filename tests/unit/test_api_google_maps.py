@@ -83,22 +83,31 @@ class TestGoogleMapsApi:
 
         assert maps_response == expected_result
 
+    @pytest.fixture
+    def mock_request(self, monkeypatch: MonkeyPatch):
+        def _request_patch(self, query: str) -> Dict[str, float]:
+            return GEOCODE_DATA
+
+        monkeypatch.setattr(GoogleMapsApi, "_request", _request_patch)
+
     @pytest.mark.parametrize(
         "query,expected_result",
-        [("Chambly France", {"lat": 49.165882, "lng": 2.244301}),],
+        [
+            (
+                "Chambly France",
+                {
+                    "title": "60230 Chambly, France",
+                    "coords": {"lat": 49.165882, "lng": 2.244301},
+                },
+            ),
+        ],
     )
     def test_search(
-        self, query: str, expected_result: Dict[str, float], monkeypatch: MonkeyPatch
+        self, query: str, expected_result: Dict[str, float], mock_request
     ) -> None:
-        class MockRequest:
-            def __init__(self, *args: Any, **kwargs: Any) -> None:
-                return None
 
-            def json(self) -> Dict:
-                return GEOCODE_DATA
-
-        monkeypatch.setattr(requests, "get", MockRequest)
         google_maps: GoogleMapsApi = GoogleMapsApi()
-        maps_response = google_maps.search(query)
+        maps_response = google_maps.search("query")
 
         assert maps_response == expected_result
+

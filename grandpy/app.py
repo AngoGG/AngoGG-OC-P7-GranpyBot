@@ -36,12 +36,12 @@ class App:
         """
         sentence: str = self.parser.get_clean_sentence(query)
 
-        location: Dict[str, float] = self.google_maps.search(sentence)
-        wiki = self.wikipedia.query_by_geosearch(location)
+        maps_info: Dict[str, float] = self.google_maps.search(sentence)
+        wiki = self.wikipedia.query_by_geosearch(maps_info["coords"])
         wiki_infos = self.wikipedia.get_infos_from_wikipedia(wiki[0])
 
         return {
-            "location": location,
+            "location": maps_info["coords"],
             "title": wiki_infos["title"],
             "summary": wiki_infos["summary"],
             "url": wiki_infos["url"],
