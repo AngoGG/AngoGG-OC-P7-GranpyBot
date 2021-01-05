@@ -56,7 +56,41 @@ function create_question_div(question) {
     return chat_entry
 }
 
-function create_answer_div(answer, url_div, map_div) {
+function create_positive_answer_div(answer, wiki_summary, url_div, map_div) {
+    // Create div class="chat"
+    var chat_entry = document.createElement("div")
+    chat_entry.setAttribute('class', 'chat  chat-left');
+
+    var chat_avatar = document.createElement("div")
+    chat_avatar.setAttribute('class', 'chat-avatar');
+    var you = create_element("p", "Grandpy")
+
+    chat_avatar.appendChild(you)
+    chat_entry.appendChild(chat_avatar)
+
+    var chat_body = document.createElement("div")
+    chat_body.setAttribute('class', 'chat-body');
+
+    var chat_content = document.createElement("div")
+    chat_content.setAttribute('class', 'chat-content');
+
+    var grandpy = create_element("p", answer)
+
+    var summary = create_element("p", wiki_summary)
+    summary.appendChild(url_div)
+    grandpy.appendChild(summary)
+ 
+    chat_content.appendChild(grandpy)
+    chat_content.appendChild(map_div)
+
+    chat_body.appendChild(chat_content)
+    chat_entry.appendChild(chat_body)
+    
+
+    return chat_entry
+}
+
+function create_negative_answer_div(answer) {
     // Create div class="chat"
     var chat_entry = document.createElement("div")
     chat_entry.setAttribute('class', 'chat  chat-left');
@@ -76,10 +110,8 @@ function create_answer_div(answer, url_div, map_div) {
     chat_content.setAttribute('class', 'chat-content');
 
     var grandpy = create_element("p", answer)
-    grandpy.appendChild(url_div)
 
     chat_content.appendChild(grandpy)
-    chat_content.appendChild(map_div)
 
     chat_body.appendChild(chat_content)
     chat_entry.appendChild(chat_body)
@@ -87,6 +119,7 @@ function create_answer_div(answer, url_div, map_div) {
 
     return chat_entry
 }
+
             
 $(document).ready(function(){
     
@@ -113,23 +146,24 @@ $(document).ready(function(){
             
             success: function(response, textStatus, jqXHR) {
                 var obj = JSON.parse(response);
-                console.log(obj)
+
                 var url = document.createElement("a");
-                var url_text = document.createTextNode(obj.info.url)
-                url.setAttribute('href', obj.url);
+                var url_text = document.createTextNode(" Si tu veux en savoir plus, c'est par ici!")
+                url.setAttribute('href', obj.info.url);
                 url.setAttribute('target', '_blank');
                 url.appendChild(url_text);
 
                 var map_google = create_map(obj.info.location)
 
-                answer_entry = create_answer_div("Hey oui mon kiki j'ai la réponse! Elle se trouve juste ici! ", url, map_google)
+                answer_entry = create_positive_answer_div("Hey oui mon kiki j'ai la réponse!", obj.info.summary, url, map_google)
 
                 chat_box.appendChild(answer_entry)
 
             },
             error: function (data) {
-                grandpy_answer_element = create_element("p", "GrandPy: Je suis désolé mon kiki, Papy y sait pas tout tu sais :(");
-                ask_box.appendChild(grandpy_answer_element);
+
+                grandpy_answer_element = create_negative_answer_div("GrandPy: Je suis désolé mon kiki, Papy y sait pas tout tu sais :(");
+                chat_box.appendChild(grandpy_answer_element);
             },
         });
     });
