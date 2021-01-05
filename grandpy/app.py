@@ -36,7 +36,7 @@ class App:
         """
         sentence: str = self.parser.get_clean_sentence(query)
         maps_info: Dict[str, float] = self.google_maps.search(sentence)
-        print(f"HELLOOOOOOOO  {maps_info}")
+
         wiki_infos = self.wikipedia.get_page_info(
             maps_info["title"], maps_info["coords"]
         )

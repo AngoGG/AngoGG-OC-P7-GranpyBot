@@ -91,3 +91,32 @@ class TestApp:
         self.grandpy: App = App()
 
         assert self.grandpy.answer(query) == expected_result
+
+    @pytest.mark.parametrize(
+        "query, expected_result",
+        [
+            (
+                "Chambly",
+                {
+                    "info": {
+                        "location": {"lat": 49.165882, "lng": 2.244301},
+                        "title": "Paris",
+                        "summary": "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n",
+                        "url": "https://fr.wikipedia.org/wiki/Paris",
+                    },
+                    "search_type": "coords",
+                },
+            )
+        ],
+    )
+    def test_answer_from_title(
+        self,
+        query: str,
+        expected_result: Dict[str, any],
+        mock_google_maps_search,
+        mock_wiki_get_page_info_from_coords,
+    ) -> None:
+
+        self.grandpy: App = App()
+
+        assert self.grandpy.answer("KO Title") == expected_result
