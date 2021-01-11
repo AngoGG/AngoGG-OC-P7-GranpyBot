@@ -10,6 +10,7 @@ pytest = "*"
 googlemaps = "*"
 pymediawiki = "*"
 flask = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.8"
