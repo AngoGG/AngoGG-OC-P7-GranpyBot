@@ -244,6 +244,7 @@ class TestWikipediaApi:
 
         monkeypatch.setattr(WikipediaApi, "_get_page_url", _get_page_url_patch)
 
+    @pytest.mark.skip(reason="Title search is no longer used")
     @pytest.mark.parametrize(
         "query,expected_result",
         [
@@ -297,7 +298,7 @@ class TestWikipediaApi:
             ),
         ],
     )
-    def test__get_page_info_ko_title(
+    def test__get_page_info(
         self,
         query: str,
         expected_result: Dict[str, float],

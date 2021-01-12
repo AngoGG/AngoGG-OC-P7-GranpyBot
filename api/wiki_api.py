@@ -130,27 +130,15 @@ class WikipediaApi:
         Returns:
         """
 
-        page_id = self._search_page_by_title(gmaps_title)
-
-        if gmaps_title in page_id["title"] or page_id["title"] in gmaps_title:
-            page_info = {
-                "page_info": {
-                    "title": page_id["title"],
-                    "summary": self._get_page_summary(page_id["page_id"]),
-                    "url": self._get_page_url(page_id["page_id"]),
-                },
-                "search_type": "title",
-            }
-        else:
-            page_id = self._search_page_by_geo(gmaps_coords)
-            page_info = {
-                "page_info": {
-                    "title": page_id["title"],
-                    "summary": self._get_page_summary(page_id["page_id"]),
-                    "url": self._get_page_url(page_id["page_id"]),
-                },
-                "search_type": "coords",
-            }
+        page_id = self._search_page_by_geo(gmaps_coords)
+        page_info = {
+            "page_info": {
+                "title": page_id["title"],
+                "summary": self._get_page_summary(page_id["page_id"]),
+                "url": self._get_page_url(page_id["page_id"]),
+            },
+            "search_type": "coords",
+        }
 
         return page_info
 
