@@ -65,7 +65,7 @@ class WikipediaApi:
         }
         req = requests.get(self.wiki_api_url, params=params)
 
-        data = random.choice(req.json()["query"]["geosearch"])
+        data = req.json()["query"]["geosearch"][0]
         return {
             "page_id": data["pageid"],
             "title": data["title"],
