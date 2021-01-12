@@ -1,4 +1,4 @@
-var random_answer_google = ['Excellente question! Tu savais que ', 'Hum... si je ne dis pas de bétise ' ]
+var random_answer_google = ['Bien sûr mon kiki! Voici l\'adresse : ', 'Hum... si je ne dis pas de bétise ça se trouve ici :' ]
 var random_answer_wiki = ['C\'est marrant que tu me demandes ça, je vais te raconter ! ',  'Maintenant que t\'en parles, ça me fait penser.' ]
 
 
@@ -31,7 +31,6 @@ function create_map(coords) {
         map: map,
       });
     
-
     map_card_div.appendChild(map_div)
     
     return map_card_div;
@@ -63,7 +62,6 @@ function create_question_div(question) {
     img.setAttribute('src', '/static/assets/img/child.jpg');
     img.setAttribute('alt', '...');
 
-
     you.appendChild(img)
 
     chat_avatar.appendChild(you)
@@ -84,7 +82,7 @@ function create_question_div(question) {
     return chat_entry
 }
 
-function create_positive_answer_google_div(answer, map_div) {
+function create_positive_answer_google_div(answer, gmaps_address, map_div) {
     // Create div class="chat"
     var chat_entry = document.createElement("div")
     chat_entry.setAttribute('class', 'chat  chat-left');
@@ -103,7 +101,6 @@ function create_positive_answer_google_div(answer, map_div) {
     img.setAttribute('src', '/static/assets/img/grandpy.png');
     img.setAttribute('alt', '...');
 
-
     you.appendChild(img)
 
     chat_avatar.appendChild(you)
@@ -115,7 +112,7 @@ function create_positive_answer_google_div(answer, map_div) {
     var chat_content = document.createElement("div")
     chat_content.setAttribute('class', 'chat-content');
 
-    var grandpy = create_element("p", answer)
+    var grandpy = create_element("p", answer + gmaps_address)
 
     chat_content.appendChild(grandpy)
     chat_content.appendChild(map_div)
@@ -123,7 +120,6 @@ function create_positive_answer_google_div(answer, map_div) {
     chat_body.appendChild(chat_content)
     chat_entry.appendChild(chat_body)
     
-
     return chat_entry
 }
 
@@ -247,7 +243,7 @@ $(document).ready(function(){
 
                 var map_google = create_map(obj.info.location)
 
-                google_answer_entry = create_positive_answer_google_div(get_random_answer("google"), map_google)
+                google_answer_entry = create_positive_answer_google_div(get_random_answer("google"), obj.info.address, map_google)
                 wiki_answer_entry = create_positive_answer_wiki_div(get_random_answer("wiki"), url, obj.info.summary)
                 
                 chat_box.appendChild(google_answer_entry)
