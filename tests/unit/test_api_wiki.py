@@ -14,102 +14,7 @@ import mediawiki
 from _pytest.monkeypatch import MonkeyPatch
 from api.wiki_api import WikipediaApi
 import api.wiki_api
-
-
-WIKI_TITLE_SEARCH_DATA: Dict = {
-    "batchcomplete": "",
-    "continue": {"sroffset": 10, "continue": "-||"},
-    "query": {
-        "searchinfo": {
-            "totalhits": 411694,
-            "suggestion": "marie",
-            "suggestionsnippet": "marie",
-        },
-        "search": [
-            {
-                "ns": 0,
-                "title": "Paris",
-                "pageid": 681159,
-                "size": 407409,
-                "wordcount": 44698,
-                "snippet": 'significations, voir <span class="searchmatch">Paris</span> (homonymie)',
-                "timestamp": "2021-01-02T15:42:41Z",
-            },
-        ],
-    },
-}
-
-WIKI_GEOSEARCH_DATA: Dict = {
-    "batchcomplete": "",
-    "query": {
-        "geosearch": [
-            {
-                "pageid": 3120649,
-                "ns": 0,
-                "title": "Quai de la Gironde",
-                "lat": 48.8965,
-                "lon": 2.383164,
-                "dist": 114.2,
-                "primary": "",
-            },
-            {
-                "pageid": 11988883,
-                "ns": 0,
-                "title": "Parc du Pont de Flandre",
-                "lat": 48.89694,
-                "lon": 2.38194,
-                "dist": 124.4,
-                "primary": "",
-            },
-            {
-                "pageid": 3124793,
-                "ns": 0,
-                "title": "Square du Quai-de-la-Gironde",
-                "lat": 48.896194,
-                "lon": 2.383181,
-                "dist": 147.8,
-                "primary": "",
-            },
-        ]
-    },
-}
-
-WIKI_SUMMARY_DATA: Dict = {
-    "batchcomplete": True,
-    "query": {
-        "pages": [
-            {
-                "pageid": 681159,
-                "ns": 0,
-                "title": "Paris",
-                "extract": "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n",
-            }
-        ]
-    },
-}
-
-WIKI_URL_DATA: Dict = {
-    "batchcomplete": "",
-    "query": {
-        "pages": {
-            "681159": {
-                "pageid": 681159,
-                "ns": 0,
-                "title": "Paris",
-                "contentmodel": "wikitext",
-                "pagelanguage": "fr",
-                "pagelanguagehtmlcode": "fr",
-                "pagelanguagedir": "ltr",
-                "touched": "2021-01-04T15:20:46Z",
-                "lastrevid": 178406474,
-                "length": 407435,
-                "fullurl": "https://fr.wikipedia.org/wiki/Paris",
-                "editurl": "https://fr.wikipedia.org/w/index.php?title=Paris&action=edit",
-                "canonicalurl": "https://fr.wikipedia.org/wiki/Paris",
-            }
-        }
-    },
-}
+from tests import tests_variables
 
 
 class TestWikipediaApi:
@@ -127,7 +32,7 @@ class TestWikipediaApi:
                 return None
 
             def json(self) -> Dict:
-                return WIKI_TITLE_SEARCH_DATA
+                return tests_variables.wiki_title_search_data
 
         monkeypatch.setattr(requests, "get", MockRequest)
 
@@ -157,7 +62,7 @@ class TestWikipediaApi:
                 return None
 
             def json(self) -> Dict:
-                return WIKI_GEOSEARCH_DATA
+                return tests_variables.wiki_geosearch_data
 
         monkeypatch.setattr(requests, "get", MockRequest)
 
@@ -183,7 +88,7 @@ class TestWikipediaApi:
                 return None
 
             def json(self) -> Dict:
-                return WIKI_SUMMARY_DATA
+                return tests_variables.wiki_summary_data
 
         monkeypatch.setattr(requests, "get", MockRequest)
 
@@ -203,7 +108,7 @@ class TestWikipediaApi:
                 return None
 
             def json(self) -> Dict:
-                return WIKI_URL_DATA
+                return tests_variables.wiki_url_data
 
         monkeypatch.setattr(requests, "get", MockRequest)
 

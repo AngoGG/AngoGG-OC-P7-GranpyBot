@@ -12,60 +12,22 @@ import pytest
 import requests
 from _pytest.monkeypatch import MonkeyPatch
 from api.google_maps_api import GoogleMapsApi
-
-GEOCODE_DATA: Dict = {
-    "results": [
-        {
-            "address_components": [
-                {
-                    "long_name": "Chambly",
-                    "short_name": "Chambly",
-                    "types": ["locality", "political"],
-                },
-                {
-                    "long_name": "Oise",
-                    "short_name": "Oise",
-                    "types": ["administrative_area_level_2", "political"],
-                },
-                {
-                    "long_name": "Hauts-de-France",
-                    "short_name": "Hauts-de-France",
-                    "types": ["administrative_area_level_1", "political"],
-                },
-                {
-                    "long_name": "France",
-                    "short_name": "FR",
-                    "types": ["country", "political"],
-                },
-                {"long_name": "60230", "short_name": "60230", "types": ["postal_code"]},
-            ],
-            "formatted_address": "60230 Chambly, France",
-            "geometry": {
-                "bounds": {
-                    "northeast": {"lat": 49.1972119, "lng": 2.275515},
-                    "southwest": {"lat": 49.1513141, "lng": 2.216646},
-                },
-                "location": {"lat": 49.165882, "lng": 2.244301},
-                "location_type": "APPROXIMATE",
-                "viewport": {
-                    "northeast": {"lat": 49.1972119, "lng": 2.275515},
-                    "southwest": {"lat": 49.1513141, "lng": 2.216646},
-                },
-            },
-            "place_id": "ChIJ3Y877GNa5kcR6Qy4YnzvNPw",
-            "types": ["locality", "political"],
-        }
-    ],
-    "status": "OK",
-}
+from tests import tests_variables
 
 
 class TestGoogleMapsApi:
     """GoogleMapsApi test class.
     """
 
+    @pytest.fixture
+    def mock_request(self, monkeypatch: MonkeyPatch):
+        def _request_patch(self, query: str) -> Dict[str, float]:
+            return tests_variables.geocode_data
+
+        monkeypatch.setattr(GoogleMapsApi, "_request", _request_patch)
+
     @pytest.mark.parametrize(
-        "query,expected_result", [("Chambly France", GEOCODE_DATA),],
+        "query,expected_result", [("Chambly France", tests_variables.geocode_data),],
     )
     def test__request(
         self, query: str, expected_result: Dict[str, float], monkeypatch: MonkeyPatch
@@ -75,20 +37,13 @@ class TestGoogleMapsApi:
                 return None
 
             def json(self) -> Dict:
-                return GEOCODE_DATA
+                return tests_variables.geocode_data
 
         monkeypatch.setattr(requests, "get", MockRequest)
         google_maps: GoogleMapsApi = GoogleMapsApi()
         maps_response = google_maps._request(query)
 
         assert maps_response == expected_result
-
-    @pytest.fixture
-    def mock_request(self, monkeypatch: MonkeyPatch):
-        def _request_patch(self, query: str) -> Dict[str, float]:
-            return GEOCODE_DATA
-
-        monkeypatch.setattr(GoogleMapsApi, "_request", _request_patch)
 
     @pytest.mark.parametrize(
         "query,expected_result",
