@@ -44,7 +44,20 @@ function create_question_div(question) {
 
     var chat_avatar = document.createElement("div")
     chat_avatar.setAttribute('class', 'chat-avatar');
-    var you = create_element("p", "Vous")
+
+    var you = document.createElement("a");
+    you.setAttribute('class', 'avatar avatar-online');
+    you.setAttribute('data-toggle', 'tooltip');
+    you.setAttribute('href', '#');
+    you.setAttribute('data-placement', 'left');
+    you.setAttribute('title', '');
+
+    var img = document.createElement("img")
+    img.setAttribute('src', '/static/assets/img/child.jpg');
+    img.setAttribute('alt', '...');
+
+
+    you.appendChild(img)
 
     chat_avatar.appendChild(you)
     chat_entry.appendChild(chat_avatar)
@@ -71,7 +84,20 @@ function create_positive_answer_div(answer, wiki_summary, url_div, map_div) {
 
     var chat_avatar = document.createElement("div")
     chat_avatar.setAttribute('class', 'chat-avatar');
-    var you = create_element("p", "Grandpy")
+
+    var you = document.createElement("a");
+    you.setAttribute('class', 'avatar avatar-online');
+    you.setAttribute('data-toggle', 'tooltip');
+    you.setAttribute('href', '#');
+    you.setAttribute('data-placement', 'left');
+    you.setAttribute('title', '');
+
+    var img = document.createElement("img")
+    img.setAttribute('src', '/static/assets/img/grandpy.png');
+    img.setAttribute('alt', '...');
+
+
+    you.appendChild(img)
 
     chat_avatar.appendChild(you)
     chat_entry.appendChild(chat_avatar)
@@ -105,7 +131,20 @@ function create_negative_answer_div(answer) {
 
     var chat_avatar = document.createElement("div")
     chat_avatar.setAttribute('class', 'chat-avatar');
-    var you = create_element("p", "Grandpy")
+
+    var you = document.createElement("a");
+    you.setAttribute('class', 'avatar avatar-online');
+    you.setAttribute('data-toggle', 'tooltip');
+    you.setAttribute('href', '#');
+    you.setAttribute('data-placement', 'left');
+    you.setAttribute('title', '');
+
+    var img = document.createElement("img")
+    img.setAttribute('src', '/static/assets/img/grandpy.png');
+    img.setAttribute('alt', '...');
+
+
+    you.appendChild(img)
 
     chat_avatar.appendChild(you)
     chat_entry.appendChild(chat_avatar)
@@ -142,10 +181,6 @@ $(document).ready(function(){
         question_entry = create_question_div(decodeURI(question))
         chat_box.appendChild(question_entry)
         
-        answer_entry = create_question_div("Laisse moi réfléchir...")
-        chat_box.appendChild(question_entry)
-
-
         $.ajax({
             url : "/ask_grandpy",
             type : "POST",
