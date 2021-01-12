@@ -252,7 +252,8 @@ $(document).ready(function(){
             },
             error: function (data) {
 
-                grandpy_answer_element = create_negative_answer_div("GrandPy: Je suis désolé mon kiki, Papy y sait pas tout tu sais :(");
+                grandpy_answer_element = create_negative_answer_div('GrandPy: Je suis désolé mon kiki, Papy y sait pas tout tu sais :( \r\n Tu devrais essayer de poser une question plus précise \
+                                                                        qui contient des mots comme "où se trouve" ou encore "où se situe", ça m\'aiderais sûrement à retrouver ton lieux');
                 chat_box.appendChild(grandpy_answer_element);
             },
         });
