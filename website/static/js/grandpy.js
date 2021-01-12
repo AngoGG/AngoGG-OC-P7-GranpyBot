@@ -217,13 +217,13 @@ $(document).ready(function(){
     
     $('#ask_grandpy').click(function(e){
         e.preventDefault(); 
-        var question = encodeURI( $('#question').val() );
+        var question = $('#question').val();
 
         
         // Sentence Div Creation
         var chat_box = document.getElementById('chat-box');
         
-        question_entry = create_question_div(decodeURI(question))
+        question_entry = create_question_div(question)
         chat_box.appendChild(question_entry)
         
         $.ajax({
