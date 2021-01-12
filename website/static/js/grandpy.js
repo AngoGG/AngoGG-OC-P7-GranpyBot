@@ -1,8 +1,15 @@
-var random_answer = ['Excellente question! Tu savais que ', 'C\'est marrant que tu me demandes ça, je vais te raconter : ', 'Hum... si je ne dis pas de bétise ' ]
+var random_answer_google = ['Excellente question! Tu savais que ', 'Hum... si je ne dis pas de bétise ' ]
+var random_answer_wiki = ['C\'est marrant que tu me demandes ça, je vais te raconter ! ',  'Maintenant que t\'en parles, ça me fait penser.' ]
 
-function get_random_answer(){
-	var random_number = Math.floor(Math.random() * (3 - 1)) + 0;
-	var answer = random_answer[random_number];
+
+function get_random_answer(answer_type){
+    var random_number = Math.floor(Math.random() * (3 - 1)) + 0;
+    if (answer_type == "google") {
+        var answer = random_answer_google[random_number];
+    }else{
+        var answer = random_answer_wiki[random_number];
+    }
+	
 	return answer;
 }
 
@@ -77,7 +84,50 @@ function create_question_div(question) {
     return chat_entry
 }
 
-function create_positive_answer_div(answer, wiki_summary, url_div, map_div) {
+function create_positive_answer_google_div(answer, map_div) {
+    // Create div class="chat"
+    var chat_entry = document.createElement("div")
+    chat_entry.setAttribute('class', 'chat  chat-left');
+
+    var chat_avatar = document.createElement("div")
+    chat_avatar.setAttribute('class', 'chat-avatar');
+
+    var you = document.createElement("a");
+    you.setAttribute('class', 'avatar avatar-online');
+    you.setAttribute('data-toggle', 'tooltip');
+    you.setAttribute('href', '#');
+    you.setAttribute('data-placement', 'left');
+    you.setAttribute('title', '');
+
+    var img = document.createElement("img")
+    img.setAttribute('src', '/static/assets/img/grandpy.png');
+    img.setAttribute('alt', '...');
+
+
+    you.appendChild(img)
+
+    chat_avatar.appendChild(you)
+    chat_entry.appendChild(chat_avatar)
+
+    var chat_body = document.createElement("div")
+    chat_body.setAttribute('class', 'chat-body');
+
+    var chat_content = document.createElement("div")
+    chat_content.setAttribute('class', 'chat-content');
+
+    var grandpy = create_element("p", answer)
+
+    chat_content.appendChild(grandpy)
+    chat_content.appendChild(map_div)
+
+    chat_body.appendChild(chat_content)
+    chat_entry.appendChild(chat_body)
+    
+
+    return chat_entry
+}
+
+function create_positive_answer_wiki_div(answer, url_div, wiki_summary) {
     // Create div class="chat"
     var chat_entry = document.createElement("div")
     chat_entry.setAttribute('class', 'chat  chat-left');
@@ -115,7 +165,6 @@ function create_positive_answer_div(answer, wiki_summary, url_div, map_div) {
     grandpy.appendChild(summary)
  
     chat_content.appendChild(grandpy)
-    chat_content.appendChild(map_div)
 
     chat_body.appendChild(chat_content)
     chat_entry.appendChild(chat_body)
@@ -198,9 +247,11 @@ $(document).ready(function(){
 
                 var map_google = create_map(obj.info.location)
 
-                answer_entry = create_positive_answer_div(get_random_answer(), obj.info.summary, url, map_google)
-
-                chat_box.appendChild(answer_entry)
+                google_answer_entry = create_positive_answer_google_div(get_random_answer("google"), map_google)
+                wiki_answer_entry = create_positive_answer_wiki_div(get_random_answer("wiki"), url, obj.info.summary)
+                
+                chat_box.appendChild(google_answer_entry)
+                chat_box.appendChild(wiki_answer_entry)
 
             },
             error: function (data) {
