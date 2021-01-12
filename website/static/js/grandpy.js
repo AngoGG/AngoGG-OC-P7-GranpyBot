@@ -1,3 +1,11 @@
+var random_answer = ['Excellente question! Tu savais que ', 'C\'est marrant que tu me demandes ça, je vais te raconter : ', 'Hum... si je ne dis pas de bétise ' ]
+
+function get_random_answer(){
+	var random_number = Math.floor(Math.random() * (3 - 1)) + 0;
+	var answer = random_answer[random_number];
+	return answer;
+}
+
 function create_map(coords) {
     var map_card_div = document.createElement("div");
     map_card_div.setAttribute('class', 'card-body text-center');
@@ -155,7 +163,7 @@ $(document).ready(function(){
 
                 var map_google = create_map(obj.info.location)
 
-                answer_entry = create_positive_answer_div("Hey oui mon kiki j'ai la réponse!", obj.info.summary, url, map_google)
+                answer_entry = create_positive_answer_div(get_random_answer(), obj.info.summary, url, map_google)
 
                 chat_box.appendChild(answer_entry)
 
