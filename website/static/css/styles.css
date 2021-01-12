@@ -4628,6 +4628,16 @@ input[type=button].btn-block {
   padding-top: 0.3125rem;
   padding-bottom: 0.3125rem;
   margin-right: 1rem;
+  font-size: 2.5rem;
+  line-height: inherit;
+  white-space: nowrap;
+}
+
+.navbar-brand-second {
+  display: inline-block;
+  padding-top: 0.3125rem;
+  padding-bottom: 0.3125rem;
+  margin-right: 1rem;
   font-size: 1.25rem;
   line-height: inherit;
   white-space: nowrap;
@@ -11347,9 +11357,6 @@ body {
   color: #fff;
 }
 
-.footer {
-  padding: 5rem 0;
-}
 
 /* Maps and Chatbox CSS */
 
@@ -11369,12 +11376,6 @@ body {
   height: 100%;
   width: 100%;
   position: absolute;
-}
-
-
-body {
-  background: #ddd;
-  margin-top: 10px;
 }
 
 .chat-box {
@@ -11398,7 +11399,7 @@ body {
 
 .chat-body {
   display: block;
-  margin: 10px 30px 0 0;
+  margin: 0 30px 30px 0;
   overflow: hidden;
 }
 
@@ -11406,13 +11407,15 @@ body {
   margin-top: 0
 }
 
+
+
 .chat-content {
   position: relative;
   display: block;
   float: right;
   width: 100%;
   padding: 8px 15px;
-  margin: 0 20px 10px 0;
+  margin: 0 10px 0 0;
   clear: both;
   color: #fff;
   background-color: #62a8ea;
@@ -11440,12 +11443,6 @@ body {
   border-color: transparent
 }
 
-.chat-time {
-  display: block;
-  margin-top: 8px;
-  color: rgba(255, 255, 255, .6)
-}
-
 .chat-left .chat-avatar {
   float: left
 }
@@ -11457,7 +11454,7 @@ body {
 
 .chat-left .chat-content {
   float: left;
-  margin: 0 0 10px 20px;
+  margin: 0 0 0 10px;
   color: #76838f;
   background-color: #dfe9ef
 }
@@ -11476,6 +11473,14 @@ body {
 .chat-left .chat-time {
   color: #a3afb7
 }
+
+.chat-time {
+  display: block;
+  margin-top: 8px;
+  color: rgba(255, 255, 255, .6)
+}
+
+
 
 .panel-footer {
   padding: 0 30px 15px;
