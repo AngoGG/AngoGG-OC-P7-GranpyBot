@@ -21,7 +21,7 @@ from api.wiki_api import WikipediaApi
 def mock_google_maps_search(monkeypatch: MonkeyPatch):
     def search_patch(self, query: str) -> Dict[str, float]:
         return {
-            "title": "60230 Chambly, France",
+            "address": "60230 Chambly, France",
             "coords": {"lat": 49.165882, "lng": 2.244301},
         }
 
@@ -100,7 +100,7 @@ class TestApp:
                 {
                     "info": {
                         "location": {"lat": 49.165882, "lng": 2.244301},
-                        "title": "Paris",
+                        "address": "60230 Chambly, France",
                         "summary": "Paris ([pa.ʁi]) est la commune la plus peuplée et la capitale de la France.\n",
                         "url": "https://fr.wikipedia.org/wiki/Paris",
                     },

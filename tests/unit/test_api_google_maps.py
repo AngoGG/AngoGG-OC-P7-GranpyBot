@@ -51,7 +51,7 @@ class TestGoogleMapsApi:
             (
                 "Chambly France",
                 {
-                    "title": "60230 Chambly, France",
+                    "address": "60230 Chambly, France",
                     "coords": {"lat": 49.165882, "lng": 2.244301},
                 },
             ),

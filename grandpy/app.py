@@ -38,13 +38,13 @@ class App:
         maps_info: Dict[str, float] = self.google_maps.search(sentence)
 
         wiki_infos = self.wikipedia.get_page_info(
-            maps_info["title"], maps_info["coords"]
+            maps_info["address"], maps_info["coords"]
         )
 
         return {
             "info": {
                 "location": maps_info["coords"],
-                "title": wiki_infos["page_info"]["title"],
+                "address": maps_info["address"],
                 "summary": wiki_infos["page_info"]["summary"],
                 "url": wiki_infos["page_info"]["url"],
             },

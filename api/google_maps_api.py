@@ -37,7 +37,7 @@ class GoogleMapsApi:
         data = self._request(query)
 
         return {
-            "title": data["results"][0]["formatted_address"],
+            "address": data["results"][0]["formatted_address"],
             "coords": data["results"][0]["geometry"]["location"],
         }
 
